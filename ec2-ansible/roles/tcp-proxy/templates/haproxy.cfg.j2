@@ -1,0 +1,25 @@
+global
+    log /dev/log local0
+    maxconn 4096
+
+defaults
+    log     global
+    mode    tcp
+    option  tcplog
+    timeout connect 10s
+    timeout client  300s
+    timeout server  300s
+
+frontend https_in
+    bind *:443
+    default_backend k8s_https
+
+frontend http_in
+    bind *:80
+    default_backend k8s_http
+
+backend k8s_https
+    server kube-vip {{ kube_vip_ip }}:443 check
+
+backend k8s_http
+    server kube-vip {{ kube_vip_ip }}:80 check

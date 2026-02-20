@@ -1,0 +1,12 @@
+---
+- name: Configure EC2 tunnel instance
+  hosts: all
+  become: true
+  vars:
+    vault_addr: "https://vault.apps.okd.benrachmiel.org"
+    # Set VAULT_TOKEN in environment
+    kube_vip_ip: "192.168.1.200"
+    wg_port: 51820
+  roles:
+    - wireguard
+    - tcp-proxy

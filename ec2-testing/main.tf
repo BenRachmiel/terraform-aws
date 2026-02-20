@@ -44,11 +44,16 @@ data "vault_kv_secret_v2" "cloudflare" {
   name  = "cloudflare/api-token"
 }
 
-# --- Variables ---
+# --- Cloudflare zone lookup ---
 
-variable "cloudflare_zone_id" {
-  description = "Cloudflare zone ID for benrachmiel.org"
-  type        = string
+data "cloudflare_zones" "benrachmiel" {
+  filter {
+    name = "benrachmiel.org"
+  }
+}
+
+locals {
+  cloudflare_zone_id = data.cloudflare_zones.benrachmiel.zones[0].id
 }
 
 # --- SSH key ---
@@ -125,7 +130,7 @@ resource "aws_instance" "tunnel" {
 # --- Cloudflare DNS ---
 
 resource "cloudflare_record" "tunnel" {
-  zone_id = var.cloudflare_zone_id
+  zone_id = local.cloudflare_zone_id
   name    = "tunnel.k8s"
   content = aws_instance.tunnel.public_ip
   type    = "A"
@@ -134,7 +139,7 @@ resource "cloudflare_record" "tunnel" {
 }
 
 resource "cloudflare_record" "wildcard" {
-  zone_id = var.cloudflare_zone_id
+  zone_id = local.cloudflare_zone_id
   name    = "*.k8s"
   content = aws_instance.tunnel.public_ip
   type    = "A"

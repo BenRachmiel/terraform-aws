@@ -6,12 +6,12 @@
 
 - name: Get WireGuard keys from Vault
   set_fact:
-    wg_keys: "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/wireguard/keys url={{ vault_addr }} token={{ lookup(\"env\", \"VAULT_TOKEN\") }}') }}"
+    wg_keys: "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/wireguard/keys url=' ~ vault_addr ~ ' token=' ~ lookup('env', 'VAULT_TOKEN')) }}"
   no_log: true
 
 - name: Get WireGuard config from Vault
   set_fact:
-    wg_config: "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/wireguard/config url={{ vault_addr }} token={{ lookup(\"env\", \"VAULT_TOKEN\") }}') }}"
+    wg_config: "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/wireguard/config url=' ~ vault_addr ~ ' token=' ~ lookup('env', 'VAULT_TOKEN')) }}"
 
 - name: Template WireGuard config
   template:

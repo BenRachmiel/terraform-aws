@@ -16,7 +16,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "eu-north-1"
+  region = var.aws_region
 }
 
 provider "vault" {
@@ -60,7 +60,7 @@ locals {
 
 resource "aws_key_pair" "ssh_key" {
   key_name   = "ec2-testing-key"
-  public_key = file("~/.ssh/id_ed25519_aws.pub")
+  public_key = file(var.ssh_public_key_path)
 }
 
 # --- Security group ---
@@ -95,8 +95,8 @@ resource "aws_security_group" "tunnel" {
 
   ingress {
     description = "WireGuard"
-    from_port   = 51820
-    to_port     = 51820
+    from_port   = var.wireguard_port
+    to_port     = var.wireguard_port
     protocol    = "udp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -112,14 +112,18 @@ resource "aws_security_group" "tunnel" {
 # --- EC2 instance ---
 
 resource "aws_instance" "tunnel" {
-  ami           = "ami-073130f74f5ffb161"
-  instance_type = "t3.micro"
+  ami           = var.ami
+  instance_type = var.instance_type
 
   key_name               = aws_key_pair.ssh_key.key_name
   vpc_security_group_ids = [aws_security_group.tunnel.id]
 
+  root_block_device {
+    volume_size = var.root_volume_size
+  }
+
   credit_specification {
-    cpu_credits = "standard"
+    cpu_credits = var.cpu_credits
   }
 
   tags = {

@@ -19,7 +19,7 @@ frontend http_in
     default_backend k8s_http
 
 backend k8s_https
-    server kube-vip {{ kube_vip_ip }}:443 check
+    server gateway {{ gateway_ip }}:443 check
 
 backend k8s_http
-    server kube-vip {{ kube_vip_ip }}:80 check
+    server gateway {{ gateway_ip }}:80 check

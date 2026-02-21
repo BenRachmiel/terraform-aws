@@ -7,6 +7,8 @@
     # Set VAULT_TOKEN in environment
     kube_vip_ip: "192.168.1.200"
     gateway_ip: "192.168.1.240"
+    gateway_nodeport_http: 30080
+    gateway_nodeport_https: 30443
     wg_port: 51820
   roles:
     - wireguard

@@ -19,7 +19,11 @@ frontend http_in
     default_backend k8s_http
 
 backend k8s_https
-    server gateway {{ gateway_ip }}:443 check
+    server node1 {{ wg_config["node1_ip"] }}:{{ gateway_nodeport_https }} check
+    server node2 {{ wg_config["node2_ip"] }}:{{ gateway_nodeport_https }} check
+    server node3 {{ wg_config["node3_ip"] }}:{{ gateway_nodeport_https }} check
 
 backend k8s_http
-    server gateway {{ gateway_ip }}:80 check
+    server node1 {{ wg_config["node1_ip"] }}:{{ gateway_nodeport_http }} check
+    server node2 {{ wg_config["node2_ip"] }}:{{ gateway_nodeport_http }} check
+    server node3 {{ wg_config["node3_ip"] }}:{{ gateway_nodeport_http }} check

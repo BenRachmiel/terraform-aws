@@ -16,4 +16,4 @@ AllowedIPs = {{ wg_config["node2_ip"] }}/32
 [Peer]
 # K8s node 3
 PublicKey = {{ wg_keys["node3_public"] }}
-AllowedIPs = {{ wg_config["node3_ip"] }}/32, {{ kube_vip_ip }}/32
+AllowedIPs = {{ wg_config["node3_ip"] }}/32
